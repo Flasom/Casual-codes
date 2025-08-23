@@ -1,2 +1,2 @@
-# Simple-codes
+# Casual-codes
 
