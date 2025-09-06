@@ -16,7 +16,8 @@ def mostrar_jogo(tabuleiro):
 
 
 def tutorial():
-    print("Para jogar, insira o local a ser marcado por Coluna e Linha(C, L). Ex.: '0, 0'.\nOBS: ambas as colunas e linhas são contadas apartir de 1.")
+    print("Para jogar, insira o local a ser marcado por Coluna e Linha(C, L). Ex.: '0, 0'.")
+    print("OBS: ambas as colunas e linhas são contadas apartir de 1.")
 
 
 def separar_indices(jogada):
@@ -37,7 +38,11 @@ def marcacao(simbolo):
 
 def marcar_tabuleiro(tabuleiro, jogada, simbolo):
     indices = separar_indices(jogada)
-    tabuleiro[indices[0]][indices[1]] = marcacao(simbolo)
+    if tabuleiro[indices[0]][indices[1]] in ["X", "O"]:
+        print("Esse local já está marcado, jogue em um local ainda vazio!")
+        return True
+    else:
+        tabuleiro[indices[0]][indices[1]] = marcacao(simbolo)
 
 
 def vitoria(contador, marca):
@@ -47,16 +52,15 @@ def vitoria(contador, marca):
         return True
 
 
-def checar_jogo(tabuleiro, simbolo, contador=0):
-    # checa linhas
-    marca = marcacao(simbolo)
+def checar_linhas(simbolo, marca, tabuleiro):
     for linha in tabuleiro:
         if linha.count(marca) == 3:
             mostrar_jogo(tabuleiro)
             print(f"O {marca} ganhou!")
-            return False
+            return True
 
-    # checa colunas
+
+def checar_colunas(tabuleiro, marca, contador):
     for l in range(0, 3):
         for c in range(0, 3):
             if tabuleiro[c][l] == marca:
@@ -65,29 +69,33 @@ def checar_jogo(tabuleiro, simbolo, contador=0):
                 contador = 0
 
             if vitoria(contador, marca):
-                return False
+                return True
 
-    contador = 0
 
-    # checa diagonais
-    for i in range(0, 3):
-        if tabuleiro[i][i] == marca:
-            contador += 1
-        else:
-            contador = 0
-    if vitoria(contador, marca):
+def checar_diagonais(tabuleiro, marca, contador):
+    c = [0, 1, 2]
+    for r in range(0, 2):
+        for i in range(0, 3):
+            if tabuleiro[i][c[i]] == marca:
+                contador += 1
+        if vitoria(contador, marca):
+            return True
+        contador = 0
+        c.reverse()
+
+
+def checar_jogo(tabuleiro, simbolo, contador=0):
+    marca = marcacao(simbolo)
+
+    if checar_linhas(simbolo, marca, tabuleiro):
+        return False
+
+    if checar_colunas(tabuleiro, marca, contador):
         return False
 
     contador = 0
-    c = 2
 
-    for i in range(3):
-        if tabuleiro[i][c] == marca:
-            contador += 1
-        else:
-            contador = 0
-        c -= 1
-    if vitoria(contador, marca):
+    if checar_diagonais(tabuleiro, marca, contador):
         return False
 
     return True

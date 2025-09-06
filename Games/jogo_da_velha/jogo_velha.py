@@ -7,18 +7,15 @@ tabuleiro = criar_tabuleiro()
 print("Escreva 'help' para tutorial, 'quit' para sair ou dê sua jogada.")
 
 
-def jogo(jogando, simbolo):
-    while jogando:
-        mostrar_jogo(tabuleiro)
-        jogada = input("Dê sua jogada: ")
-        if jogada == "help":
-            tutorial()
-        elif jogada == "quit":
-            break
-        else:
-            marcar_tabuleiro(tabuleiro, jogada, simbolo)
-            jogando = checar_jogo(tabuleiro, simbolo)
+while jogando:
+    mostrar_jogo(tabuleiro)
+    jogada = input("Dê sua jogada: ")
+    if jogada == "help":
+        tutorial()
+    elif jogada == "quit":
+        break
+    else:
+        if marcar_tabuleiro(tabuleiro, jogada, simbolo):
             simbolo *= -1
-
-
-jogo(jogando, simbolo)
+        jogando = checar_jogo(tabuleiro, simbolo)
+        simbolo *= -1
